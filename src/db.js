@@ -10,6 +10,7 @@ const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
     dialect: 'postgres',
     define: {
         freezeTableName: true,
+        plain: true,
     },
 });
 

@@ -14,12 +14,23 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@pdftron/pdfnet-node": "^10.6.0-4",
     "axios": "^1.6.2",
     "cors": "^2.8.5",
+    "docx-pdf": "^0.0.1",
+    "docxtemplater": "^3.42.7",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "html-pdf": "^3.0.1",
+    "mammoth": "^1.6.0",
+    "pdf-lib": "^1.17.1",
+    "pdf-parse": "^1.1.1",
+    "pdfjs": "^2.5.3",
+    "pdfjs-dist": "^4.0.269",
     "pg": "^8.11.3",
+    "pizzip": "^3.1.4",
     "sequelize": "^6.35.2",
-    "sqlite3": "^5.1.6"
+    "sqlite3": "^5.1.6",
+    "zeebe-node": "^8.3.1"
   }
 }
