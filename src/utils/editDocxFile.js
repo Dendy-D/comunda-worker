@@ -9,26 +9,29 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 async function editDocxFile(map, templateFileName, resultFileName) {
-    const content = fs.readFileSync(
-        path.resolve(__dirname, `../files/${templateFileName}.docx`),
-        'binary'
-    );
-    
-    const zip = new PizZip(content);
-    
-    const doc = new Docxtemplater(zip, {
-        paragraphLoop: true,
-        linebreaks: true,
-    });
-    
-    doc.render(map);
+  const content = fs.readFileSync(
+    path.resolve(__dirname, `../files/${templateFileName}.docx`),
+    'binary'
+  );
 
-    const buf = doc.getZip().generate({
-        type: 'nodebuffer',
-        compression: 'DEFLATE',
-    });
+  const zip = new PizZip(content);
 
-    fs.writeFileSync(path.resolve(__dirname, `../files/${resultFileName}.docx`), buf);
+  const doc = new Docxtemplater(zip, {
+    paragraphLoop: true,
+    linebreaks: true,
+  });
+
+  doc.render(map);
+
+  const buf = doc.getZip().generate({
+    type: 'nodebuffer',
+    compression: 'DEFLATE',
+  });
+
+  fs.writeFileSync(
+    path.resolve(__dirname, `../files/${resultFileName}.docx`),
+    buf
+  );
 }
 
 export default editDocxFile;

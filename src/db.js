@@ -11,6 +11,8 @@ const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
     define: {
         freezeTableName: true,
         plain: true,
+        charset: 'utf8',
+        collate: 'utf8_general_ci',
     },
 });
 

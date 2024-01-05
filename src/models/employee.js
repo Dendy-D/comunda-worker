@@ -2,7 +2,7 @@ import { DataTypes } from 'sequelize';
 
 import sequelize from '../db.js';
 
-const User = sequelize.define('User', {
+const Employee = sequelize.define('Employee', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -20,18 +20,10 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  block: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  CA: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-  },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
   },
 });
 
-export default User;
+export default Employee;
