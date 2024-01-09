@@ -1,9 +1,6 @@
 import axios from 'axios';
 import querystring from 'querystring';
 
-import editDocxFile from '../utils/editDocxfile.js';
-import convertDocxToPdf from '../utils/convertDocxToPdf.js';
-
 import fs from 'fs';
 import { Blob } from 'buffer';
 import * as path from 'path';
@@ -12,35 +9,13 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-async function vacationApplicationHandler(req, res) {
-  const { initiatorName, initiatorPosition } = req.query;
-  let { dateFrom, dateTo } = req.query;
-
-  dateFrom = dateFrom.split('-').reverse().join('.');
-  dateTo = dateTo.split('-').reverse().join('.');
-
-  let amountOfVacationDays = dateTo.split('.')[0] - dateFrom.split('.')[0];
-
-  if (amountOfVacationDays < 2) {
-    res.status(400).send(`The amount of vacation days can't be less than 2`);
-    return;
-  }
-
-  const currentDate = new Date();
-  const currentDateInRuFormat = currentDate.toLocaleDateString('ru-RU');
+async function formDoodocsLink(req, res) {
+  const { fileType, signers } = req.body;
 
   const map = {
-    position: initiatorPosition,
-    fullName: initiatorName,
-    dateFrom,
-    dateTo,
-    amountOfVacationDays,
-    currentDate: currentDateInRuFormat,
+    vacation: 'vacationApplication',
+    order: 'order',
   };
-
-  await editDocxFile(map, 'vacationApplicationTemplate', 'vacationApplication');
-
-  await convertDocxToPdf('vacationApplication');
 
   const data = {
     grant_type: 'client_credentials',
@@ -69,17 +44,17 @@ async function vacationApplicationHandler(req, res) {
   const formData = new FormData();
 
   const fileBuffer = fs.readFileSync(
-    path.resolve(__dirname, `../files/vacationApplication.pdf`)
+    path.resolve(__dirname, `../files/${map[fileType]}.pdf`)
   );
 
   const blob = new Blob([fileBuffer], { type: 'application/pdf' });
 
   formData.append('file', blob, {
-    filename: 'vacationApplication.pdf',
+    filename: `${map[fileType]}.pdf`,
     contentType: 'application/pdf',
   });
 
-  formData.append('document_name', 'vacationApplication');
+  formData.append('document_name', map[fileType]);
 
   formData.append('teamspace_id', teamspace_id);
 
@@ -90,6 +65,19 @@ async function vacationApplicationHandler(req, res) {
       },
     })
     .then((result) => result.data.document_id);
+
+  console.log('signers: ', signers);
+  console.log('typeof signers: ', typeof signers);
+
+  const recipients = signers.map((signer, id) => {
+    return {
+      actor_id: id,
+      role: 'signer_rk',
+      attrs: {
+        email: signer,
+      },
+    }
+  })
 
   const bodyForWorkflow = {
     workflow: {
@@ -103,31 +91,40 @@ async function vacationApplicationHandler(req, res) {
       ],
       cc: [
         {
-          email: 'example@doodocs.kz',
-        },
+          email: 'random-dude@gmail.com',
+          name: 'Random dude'
+        }
       ],
       steps: [
         {
           index: 1,
           type: 'string',
-          recipients: [
-            {
-              actor_id: 0,
-              origin_id: 'da1117ea-2427-452b-bbac-047c87089659',
-              role: 'signer_rk',
-              attrs: {
-                email: 'example@doodocs.kz',
-                message: 'Привет! Как дела?',
-                filter: [
-                  {
-                    iin: '9698763456788',
-                    bin: '0098129388384',
-                    role: 'ceo',
-                  },
-                ],
-              },
-            },
-          ],
+          recipients: recipients
+          // recipients: [
+          //   {
+          //     actor_id: 0,
+          //     origin_id: 'da1117ea-2427-452b-bbac-047c87089659',
+          //     role: 'signer_rk',
+          //     attrs: {
+          //       email: 'initiatorEmail',
+          //       message: 'Привет! Как дела?',
+          //       filter: [
+          //         {
+          //           iin: '9698763456788',
+          //           bin: '0098129388384',
+          //           role: 'ceo',
+          //         },
+          //       ],
+          //     },
+          //   },
+          //   {
+          //     actor_id: 1,
+          //     role: 'signer_rk',
+          //     attrs: {
+          //       email: 'headOfHrDepartmentEmail',
+          //     },
+          //   },
+          // ],
         },
       ],
       meta: {
@@ -187,8 +184,6 @@ async function vacationApplicationHandler(req, res) {
   const link = `https://link.doodocs.kz/${linkID}`;
 
   res.status(200).send(link);
-
-  const delay = (time) => new Promise((resolve) => setTimeout(resolve, time));
 }
 
-export default vacationApplicationHandler;
+export default formDoodocsLink;
