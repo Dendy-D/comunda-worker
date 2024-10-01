@@ -21,6 +21,8 @@ async function formDoodocsLink(req, res) {
     grant_type: 'client_credentials',
   };
 
+  // d05f44ea-ee84-4ff9-b492-b20a09577b2a
+
   const config = {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -99,32 +101,32 @@ async function formDoodocsLink(req, res) {
         {
           index: 1,
           type: 'string',
-          recipients: recipients
-          // recipients: [
-          //   {
-          //     actor_id: 0,
-          //     origin_id: 'da1117ea-2427-452b-bbac-047c87089659',
-          //     role: 'signer_rk',
-          //     attrs: {
-          //       email: 'initiatorEmail',
-          //       message: 'Привет! Как дела?',
-          //       filter: [
-          //         {
-          //           iin: '9698763456788',
-          //           bin: '0098129388384',
-          //           role: 'ceo',
-          //         },
-          //       ],
-          //     },
-          //   },
-          //   {
-          //     actor_id: 1,
-          //     role: 'signer_rk',
-          //     attrs: {
-          //       email: 'headOfHrDepartmentEmail',
-          //     },
-          //   },
-          // ],
+          // recipients: recipients
+          recipients: [
+            {
+              actor_id: 0,
+              origin_id: 'da1117ea-2427-452b-bbac-047c87089659',
+              role: 'signer_rk',
+              attrs: {
+                email: 'daniilvasilenko2@mail.ru',
+                message: 'Привет! Как дела?',
+                filter: [
+                  {
+                    iin: '9698763456788',
+                    bin: '0098129388384',
+                    role: 'ceo',
+                  },
+                ],
+              },
+            },
+            {
+              actor_id: 1,
+              role: 'signer_rk',
+              attrs: {
+                email: 'headOfHrDepartmentEmail',
+              },
+            },
+          ],
         },
       ],
       meta: {
@@ -187,3 +189,5 @@ async function formDoodocsLink(req, res) {
 }
 
 export default formDoodocsLink;
+
+// https://link.doodocs.kz/3AxMGmCjzzBdHVJJNrYX

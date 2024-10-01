@@ -1,13 +1,14 @@
-FROM node:16
+FROM node:20
 
 WORKDIR /app
 
-COPY package.json /app
-
-RUN yarn
-
 COPY . .
 
-CMD ["yarn", "dev"]
+RUN nmp i
 
-EXPOSE 5000
+RUN npm i puppeteer
+
+CMD ["npm", "start"]
+
+EXPOSE 8000
+
